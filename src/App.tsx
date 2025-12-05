@@ -5,6 +5,7 @@ import Products from '@/pages/Products';
 import ProductDetails from '@/pages/ProductDetails';
 import Cart from '@/pages/Cart';
 import Payment from '@/pages/Payment';
+import Orders from '@/pages/Orders';
 import Layout from '@/components/layout/Layout';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path={ROUTES.PRODUCT_DETAILS} element={<ProductDetails />} />
           <Route path={ROUTES.CART} element={<Cart />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path={ROUTES.ORDERS} element={<Orders />} />
         </Routes>
       </Layout>
     </Router>

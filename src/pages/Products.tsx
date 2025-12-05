@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { productsData } from '@/data/products';
 import ProductCard from '@/components/products/ProductCard';
-import type { CategoryType } from '@/types/product';
 
 const categories = [
   { id: 'all', name: 'Tous les produits', icon: '🏠' },

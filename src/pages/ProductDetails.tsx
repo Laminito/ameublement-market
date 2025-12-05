@@ -39,7 +39,6 @@ const ProductDetails = () => {
     );
   }
 
-  const finalPrice = product.discountPrice || product.price;
   const hasDiscount = product.discountPrice && product.discountPrice < product.price;
   const creditDetails = calculateCreditDetails(product.discountPrice || product.price, creditDuration);
 
