@@ -2,9 +2,9 @@ import { Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-gray-900 text-gray-300 w-full">
+      <div className="container mx-auto px-4 py-12 max-w-7xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* About */}
           <div>
             <h3 className="text-white font-bold text-lg mb-4">MeubleMarket</h3>

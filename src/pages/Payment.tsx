@@ -17,25 +17,25 @@ const Payment = () => {
   const mode = state.paymentMode || 'cash';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 w-full overflow-x-hidden">
       <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/products" className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-600 transition">
-            <ArrowLeft size={20} />
+        <div className="container mx-auto px-4 py-3 sm:py-4">
+          <Link to="/products" className="inline-flex items-center gap-2 text-sm sm:text-base text-gray-600 hover:text-primary-600 transition">
+            <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
             Continuer vos achats
           </Link>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-10 max-w-3xl">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="flex items-center gap-3 mb-6">
+      <div className="container mx-auto px-4 py-6 sm:py-8 md:py-10 max-w-3xl w-full">
+        <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-4 sm:mb-6">
             {mode === 'cash' ? (
-              <Wallet className="text-green-600" size={28} />
+              <Wallet className="text-green-600" size={24} />
             ) : (
-              <CreditCard className="text-purple-600" size={28} />
+              <CreditCard className="text-purple-600" size={24} />
             )}
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-xl sm:text-2xl font-bold">
               {mode === 'cash' ? 'Paiement Cash' : `Paiement à Crédit (${state.creditDuration || 12} mois)`}
             </h1>
           </div>

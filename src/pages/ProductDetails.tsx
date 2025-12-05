@@ -56,22 +56,22 @@ const ProductDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 w-full overflow-x-hidden">
       {/* Breadcrumb */}
       <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
           <Link 
             to="/products" 
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-600 transition"
+            className="inline-flex items-center gap-2 text-sm sm:text-base text-gray-600 hover:text-primary-600 transition"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
             Retour aux produits
           </Link>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid lg:grid-cols-2 gap-12">
+      <div className="container mx-auto px-4 py-6 sm:py-8 md:py-12 max-w-7xl w-full">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
           {/* Galerie d'images */}
           <div className="space-y-4">
             <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg aspect-square">
@@ -108,19 +108,19 @@ const ProductDetails = () => {
           </div>
 
           {/* Informations produit */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
+              <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
+                <span className="px-2 sm:px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs sm:text-sm font-semibold">
                   {product.category}
                 </span>
                 {product.featured && (
-                  <span className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full text-sm font-semibold">
+                  <span className="px-2 sm:px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full text-xs sm:text-sm font-semibold">
                     ⭐ Populaire
                   </span>
                 )}
               </div>
-              <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">{product.name}</h1>
               
               {/* Note et avis */}
               <div className="flex items-center gap-4 mb-4">

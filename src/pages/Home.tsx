@@ -10,65 +10,65 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 via-purple-50 to-orange-50 py-20 overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+      <section className="relative bg-gradient-to-br from-blue-50 via-purple-50 to-orange-50 py-12 sm:py-16 md:py-20 overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 h-48 sm:w-96 sm:h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 sm:w-96 sm:h-96 bg-orange-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-1/2 left-1/2 w-48 h-48 sm:w-96 sm:h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
         <div className="container mx-auto px-4 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 bg-accent-100 text-accent-700 px-4 py-2 rounded-full text-sm font-medium">
-                <Sparkles size={16} />
+          <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="inline-flex items-center gap-2 bg-accent-100 text-accent-700 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium">
+                <Sparkles size={14} className="sm:w-4 sm:h-4" />
                 <span>Nouvelle façon d'acheter vos meubles</span>
               </div>
               
-              <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 Votre confort,
                 <span className="block bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
                   accessible à tous
                 </span>
               </h1>
               
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed">
                 Démocratiser l'accès aux biens essentiels, c'est notre mission. 
                 Aménagez votre maison dès aujourd'hui et payez en plusieurs fois, 
                 sans stress, sans frais cachés.
               </p>
 
-              <div className="flex flex-wrap gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-4">
                 <Link 
                   to={ROUTES.PRODUCTS}
-                  className="bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl hover:shadow-blue-500/50 hover:scale-105 transition-all flex items-center gap-2"
+                  className="bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold hover:shadow-xl hover:shadow-blue-500/50 hover:scale-105 transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
                   Découvrir nos produits
-                  <ArrowRight size={20} />
+                  <ArrowRight size={18} className="sm:w-5 sm:h-5" />
                 </Link>
                 <Link 
                   to={ROUTES.CREDIT_SIMULATOR}
-                  className="bg-gradient-to-r from-orange-500 to-pink-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl hover:shadow-orange-500/50 hover:scale-105 transition-all flex items-center gap-2"
+                  className="bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold hover:shadow-xl hover:shadow-orange-500/50 hover:scale-105 transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
-                  <CreditCard size={20} />
+                  <CreditCard size={18} className="sm:w-5 sm:h-5" />
                   Simuler mon crédit
                 </Link>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 pt-8">
-                <div className="text-center bg-gradient-to-br from-blue-100 to-blue-50 p-4 rounded-xl">
-                  <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">3-24</div>
-                  <div className="text-sm text-gray-700 font-medium">Mois de crédit</div>
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 pt-4 sm:pt-8">
+                <div className="text-center bg-gradient-to-br from-blue-100 to-blue-50 p-3 sm:p-4 rounded-xl">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">3-24</div>
+                  <div className="text-xs sm:text-sm text-gray-700 font-medium">Mois de crédit</div>
                 </div>
-                <div className="text-center bg-gradient-to-br from-orange-100 to-orange-50 p-4 rounded-xl">
-                  <div className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">0%</div>
-                  <div className="text-sm text-gray-700 font-medium">Frais cachés</div>
+                <div className="text-center bg-gradient-to-br from-orange-100 to-orange-50 p-3 sm:p-4 rounded-xl">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">0%</div>
+                  <div className="text-xs sm:text-sm text-gray-700 font-medium">Frais cachés</div>
                 </div>
-                <div className="text-center bg-gradient-to-br from-green-100 to-green-50 p-4 rounded-xl">
-                  <div className="text-3xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">24h</div>
-                  <div className="text-sm text-gray-700 font-medium">Approbation</div>
+                <div className="text-center bg-gradient-to-br from-green-100 to-green-50 p-3 sm:p-4 rounded-xl">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">24h</div>
+                  <div className="text-xs sm:text-sm text-gray-700 font-medium">Approbation</div>
                 </div>
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative hidden md:block">
               <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-accent-400 rounded-3xl blur-3xl opacity-20"></div>
               <div className="relative bg-white rounded-3xl shadow-2xl p-8">
                 <img 
@@ -134,16 +134,16 @@ const Home = () => {
       </section>
 
       {/* How it works */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
-        <div className="absolute top-10 right-10 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
-        <div className="absolute bottom-10 left-10 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
+        <div className="absolute top-10 right-10 w-48 h-48 sm:w-72 sm:h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <div className="absolute bottom-10 left-10 w-48 h-48 sm:w-72 sm:h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Comment ça marche ?</h2>
-            <p className="text-xl text-gray-600">En 4 étapes simples, transformez votre maison</p>
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Comment ça marche ?</h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600">En 4 étapes simples, transformez votre maison</p>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-8 relative">
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 relative">
             <div className="absolute top-1/4 left-0 right-0 h-1 bg-gradient-to-r from-primary-200 via-accent-200 to-success-200 hidden md:block"></div>
             {[
               {
@@ -179,15 +179,15 @@ const Home = () => {
                 textColor: 'text-primary-100'
               }
             ].map((item) => (
-              <div key={item.step} className="relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all">
-                <div className={`w-16 h-16 ${item.bgGradient} rounded-2xl flex items-center justify-center text-white mb-4 relative z-10`}>
-                  {item.icon}
+              <div key={item.step} className="relative bg-white p-4 sm:p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                <div className={`w-12 h-12 sm:w-16 sm:h-16 ${item.bgGradient} rounded-2xl flex items-center justify-center text-white mb-3 sm:mb-4 relative z-10`}>
+                  <div className="scale-75 sm:scale-100">{item.icon}</div>
                 </div>
-                <div className={`text-6xl font-bold ${item.textColor} absolute top-2 right-4`}>
+                <div className={`text-4xl sm:text-5xl md:text-6xl font-bold ${item.textColor} absolute top-2 right-4 opacity-50`}>
                   {item.step}
                 </div>
-                <h3 className="font-bold text-xl mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
+                <h3 className="font-bold text-base sm:text-lg md:text-xl mb-2">{item.title}</h3>
+                <p className="text-sm sm:text-base text-gray-600">{item.description}</p>
               </div>
             ))}
           </div>

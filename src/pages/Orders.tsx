@@ -47,21 +47,21 @@ const Orders = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      <div className="container mx-auto px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 w-full overflow-x-hidden">
+      <div className="container mx-auto px-4 py-6 sm:py-8 md:py-12 max-w-7xl w-full">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
             Mes Commandes
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             Suivez l'état de vos commandes et gérez vos livraisons
           </p>
         </div>
 
         {/* Orders List */}
         {mockOrders.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-lg p-12 text-center border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12 text-center border border-gray-100">
             <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
               <Package size={40} className="text-purple-600" />
             </div>
