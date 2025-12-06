@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, Phone, MapPin, Camera, Save, LogOut, AlertCircle, Lock, Eye, EyeOff, Loader } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import UserService, { type UserProfile } from '@/services/userService';
+import { getAvatarUrl } from '@/utils/imageUrl';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -294,7 +295,7 @@ export default function Profile() {
           <div className="flex flex-col sm:flex-row items-center gap-8">
             <div className="relative">
               <img
-                src={avatarPreview || profile.avatar || 'https://via.placeholder.com/150?text=Avatar'}
+                src={avatarPreview || getAvatarUrl(profile.avatar)}
                 alt="Profile"
                 className="w-32 h-32 rounded-full object-cover border-4 border-purple-200"
               />
