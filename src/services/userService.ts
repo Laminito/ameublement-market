@@ -152,6 +152,35 @@ class UserService {
   }
 
   /**
+   * Get current user avatar
+   */
+  static async getAvatar(): Promise<string | null> {
+    try {
+      const token = AuthService.getToken();
+      if (!token) {
+        return null;
+      }
+
+      const response = await fetch(getApiUrl(API_ENDPOINTS.USERS.AVATAR_ME), {
+        method: 'GET',
+        headers: {
+          ...AuthService.getAuthHeader(),
+        },
+      });
+
+      if (!response.ok) {
+        return null;
+      }
+
+      const result = await response.json();
+      return result.avatar || result.url || null;
+    } catch (error) {
+      console.error('Error fetching avatar:', error);
+      return null;
+    }
+  }
+
+  /**
    * Upload user avatar
    */
   static async uploadAvatar(file: File): Promise<{ success: boolean; url: string }> {
@@ -162,7 +191,7 @@ class UserService {
       }
 
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('avatar', file);
 
       const response = await fetch(getApiUrl(API_ENDPOINTS.UPLOADS.AVATAR), {
         method: 'POST',

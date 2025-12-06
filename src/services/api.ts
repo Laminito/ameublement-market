@@ -21,6 +21,7 @@ export const API_ENDPOINTS = {
     PROFILE_ME: '/users/profile/me',
     PROFILE: '/users/profile',
     UPDATE_PROFILE: '/users/profile',
+    AVATAR_ME: '/users/avatar/me',
     GET_USER: '/users/:id',
   },
   

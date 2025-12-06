@@ -53,6 +53,13 @@ export default function Profile() {
         setLoading(true);
         const data = await UserService.getProfile();
         setProfile(data);
+        
+        // Also fetch avatar separately if available
+        const avatar = await UserService.getAvatar();
+        if (avatar) {
+          setProfile(prev => prev ? { ...prev, avatar } : null);
+        }
+        
         setFormData({
           name: data.name || '',
           email: data.email || '',
@@ -195,9 +202,14 @@ export default function Profile() {
       await UserService.uploadAvatar(file);
       setSuccess('Avatar updated successfully!');
       
-      // Reload profile
+      // Wait for server to process
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Reload profile and fetch fresh avatar
       const updated = await UserService.getProfile();
-      setProfile(updated);
+      const avatar = await UserService.getAvatar();
+      
+      setProfile(avatar ? { ...updated, avatar } : updated);
       setAvatarPreview(null);
 
       setTimeout(() => setSuccess(''), 3000);
