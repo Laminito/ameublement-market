@@ -13,6 +13,7 @@ export const API_ENDPOINTS = {
     LOGOUT: '/auth/logout',
     REFRESH_TOKEN: '/auth/refresh-token',
     VERIFY: '/auth/verify',
+    GET_ME: '/auth/me',
   },
   
   // Users

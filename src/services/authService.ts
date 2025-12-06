@@ -136,6 +136,44 @@ class AuthService {
   }
 
   /**
+   * Get current authenticated user profile
+   */
+  static async getMe(): Promise<any> {
+    try {
+      const token = this.getToken();
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await fetch(getApiUrl(API_ENDPOINTS.AUTH.GET_ME), {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          this.clearAuth();
+          throw new Error('Session expired. Please login again.');
+        }
+        throw new Error('Failed to fetch user profile');
+      }
+
+      const data = await response.json();
+      const user = data.data || data.user || data;
+      
+      // Update stored user data
+      this.setUser(user);
+      
+      return user;
+    } catch (error) {
+      console.error('Get me error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Logout user
    */
   static async logout(): Promise<void> {

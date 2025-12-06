@@ -36,23 +36,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const storedUser = AuthService.getUser();
 
         if (storedToken && storedUser) {
-          // Verify token is still valid
-          const isValid = await AuthService.verifyToken();
-          
-          if (isValid) {
+          // Try to get fresh user data from server
+          try {
+            const freshUser = await AuthService.getMe();
             setToken(storedToken);
-            setUser(storedUser);
+            setUser(freshUser);
             setIsAuthenticated(true);
-          } else {
-            // Try to refresh token
-            const newToken = await AuthService.refreshToken();
-            if (newToken) {
-              setToken(newToken);
+          } catch (err) {
+            // If getMe fails, try to verify token
+            const isValid = await AuthService.verifyToken();
+            
+            if (isValid) {
+              setToken(storedToken);
               setUser(storedUser);
               setIsAuthenticated(true);
             } else {
-              AuthService.clearAuth();
-              setIsAuthenticated(false);
+              // Try to refresh token
+              const newToken = await AuthService.refreshToken();
+              if (newToken) {
+                setToken(newToken);
+                setUser(storedUser);
+                setIsAuthenticated(true);
+              } else {
+                AuthService.clearAuth();
+                setIsAuthenticated(false);
+              }
             }
           }
         }
