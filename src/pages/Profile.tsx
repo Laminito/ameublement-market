@@ -61,14 +61,15 @@ export default function Profile() {
           setProfile(prev => prev ? { ...prev, avatar } : null);
         }
         
+        // Map the flat structure from API to form data
         setFormData({
           name: data.name || '',
           email: data.email || '',
           phone: data.phone || '',
-          street: data.address?.street || '',
-          city: data.address?.city || '',
-          postalCode: data.address?.postalCode || '',
-          country: data.address?.country || '',
+          street: data.address || '',     // API returns address as flat string
+          city: data.city || '',          // API returns city as flat string
+          postalCode: data.postalCode || '',
+          country: data.country || '',
         });
       } catch (err: any) {
         setError(err.message || 'Failed to load profile');
@@ -117,14 +118,16 @@ export default function Profile() {
       // Reload profile
       const updated = await UserService.getProfile();
       setProfile(updated);
+      
+      // Map the flat structure from API to form data
       setFormData({
         name: updated.name || '',
         email: updated.email || '',
         phone: updated.phone || '',
-        street: updated.address?.street || '',
-        city: updated.address?.city || '',
-        postalCode: updated.address?.postalCode || '',
-        country: updated.address?.country || '',
+        street: updated.address || '',  // API returns address as flat string
+        city: updated.city || '',        // API returns city as flat string
+        postalCode: updated.postalCode || '',
+        country: updated.country || '',
       });
 
       setTimeout(() => setSuccess(''), 3000);

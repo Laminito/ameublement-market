@@ -17,12 +17,10 @@ export interface UserProfile {
   role: string;
   creditLimit?: number;
   availableCredit?: number;
-  address?: {
-    street?: string;
-    city?: string;
-    postalCode?: string;
-    country?: string;
-  };
+  address?: string;  // Street address
+  city?: string;
+  postalCode?: string;
+  country?: string;
   createdAt?: string;
 }
 
