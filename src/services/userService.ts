@@ -8,7 +8,9 @@ import AuthService from './authService';
 
 export interface UserProfile {
   id: string;
-  name: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   phone?: string;
   avatar?: string;
@@ -48,6 +50,21 @@ export interface UploadAvatarRequest {
 
 class UserService {
   /**
+   * Get full name from profile
+   */
+  static getFullName(profile: UserProfile | null): string {
+    if (!profile) return '';
+    
+    // If name exists, use it
+    if (profile.name) return profile.name;
+    
+    // Otherwise combine firstName and lastName
+    const firstName = profile.firstName || '';
+    const lastName = profile.lastName || '';
+    return `${firstName} ${lastName}`.trim();
+  }
+
+  /**
    * Get current user profile
    */
   static async getProfile(): Promise<UserProfile> {
@@ -73,7 +90,14 @@ class UserService {
       }
 
       const data = await response.json();
-      return data.data || data.user || data;
+      let profile = data.data || data.user || data;
+      
+      // Construct full name from firstName and lastName if name doesn't exist
+      if (!profile.name && (profile.firstName || profile.lastName)) {
+        profile.name = `${profile.firstName || ''} ${profile.lastName || ''}`.trim();
+      }
+      
+      return profile;
     } catch (error) {
       console.error('Get profile error:', error);
       throw error;
