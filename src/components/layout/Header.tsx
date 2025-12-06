@@ -1,10 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Menu, Heart, User, Search, X } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
+import { useAuth } from '@/contexts/AuthContext';
 import { ROUTES } from '@/constants/routes';
 import { useState } from 'react';
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const totalItems = useCartStore((state) => state.getTotalItems());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -19,12 +22,16 @@ const Header = () => {
               <span className="sm:hidden">📞 +221 77 123 45 67</span>
             </div>
             <div className="flex gap-2 sm:gap-4 text-xs sm:text-sm">
-              <Link to={ROUTES.LOGIN} className="text-gray-600 hover:text-primary-600">
-                Connexion
-              </Link>
-              <Link to={ROUTES.REGISTER} className="text-gray-600 hover:text-primary-600">
-                Inscription
-              </Link>
+              {!isAuthenticated ? (
+                <>
+                  <Link to={ROUTES.LOGIN} className="text-gray-600 hover:text-primary-600">
+                    Connexion
+                  </Link>
+                  <Link to={ROUTES.REGISTER} className="text-gray-600 hover:text-primary-600">
+                    Inscription
+                  </Link>
+                </>
+              ) : null}
             </div>
           </div>
         </div>
@@ -61,9 +68,15 @@ const Header = () => {
             <button className="hidden sm:block p-2 hover:bg-gray-100 rounded-full transition">
               <Heart size={20} className="text-gray-600" />
             </button>
-            <button className="hidden sm:block p-2 hover:bg-gray-100 rounded-full transition">
-              <User size={20} className="text-gray-600" />
-            </button>
+            {isAuthenticated && (
+              <button 
+                onClick={() => navigate(ROUTES.PROFILE)}
+                className="hidden sm:block p-2 hover:bg-gray-100 rounded-full transition"
+                title="My Profile"
+              >
+                <User size={20} className="text-gray-600" />
+              </button>
+            )}
             <Link 
               to={ROUTES.CART} 
               className="relative p-2 hover:bg-gray-100 rounded-full transition"
@@ -132,14 +145,25 @@ const Header = () => {
               >
                 📦 Mes commandes
               </Link>
-              <div className="border-t border-gray-100 mt-2 pt-2">
+              {isAuthenticated && (
                 <Link 
-                  to={ROUTES.LOGIN} 
+                  to={ROUTES.PROFILE} 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-gray-700 hover:bg-gray-50 hover:text-primary-600 font-medium transition px-4 py-3 rounded-lg block"
+                  className="text-gray-700 hover:bg-gray-50 hover:text-primary-600 font-medium transition px-4 py-3 rounded-lg"
                 >
-                  👤 Connexion
+                  👤 Mon profil
                 </Link>
+              )}
+              <div className="border-t border-gray-100 mt-2 pt-2">
+                {!isAuthenticated ? (
+                  <Link 
+                    to={ROUTES.LOGIN} 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-gray-700 hover:bg-gray-50 hover:text-primary-600 font-medium transition px-4 py-3 rounded-lg block"
+                  >
+                    👤 Connexion
+                  </Link>
+                ) : null}
               </div>
             </div>
           </nav>
