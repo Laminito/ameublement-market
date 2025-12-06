@@ -42,14 +42,23 @@ export interface RegisterRequest {
 export interface RegisterResponse {
   success: boolean;
   token: string;
-  user: {
+  data?: {
     id: string;
+    name: string;
     email: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
+    phone?: string;
     role: string;
-    createdAt: string;
+    creditLimit?: number;
+    availableCredit?: number;
+  };
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    phone?: string;
+    role: string;
+    creditLimit?: number;
+    availableCredit?: number;
   };
 }
 

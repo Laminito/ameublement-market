@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Lock, Phone, AlertCircle, Eye, EyeOff, Loader, CheckCircle } from 'lucide-react';
-import AuthService from '@/services/authService';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Register() {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -77,7 +78,7 @@ export default function Register() {
 
     setIsLoading(true);
     try {
-      await AuthService.register({
+      await register({
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,

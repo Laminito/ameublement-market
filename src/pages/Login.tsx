@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, AlertCircle, Eye, EyeOff, Loader } from 'lucide-react';
-import AuthService from '@/services/authService';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -38,10 +39,7 @@ export default function Login() {
 
     setIsLoading(true);
     try {
-      await AuthService.login({
-        email: formData.email,
-        password: formData.password,
-      });
+      await login(formData.email, formData.password);
 
       // Rediriger vers home après connexion réussie
       navigate('/');

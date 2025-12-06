@@ -57,7 +57,7 @@ class UserService {
         throw new Error('No authentication token found');
       }
 
-      const response = await fetch(getApiUrl(API_ENDPOINTS.USERS.PROFILE), {
+      const response = await fetch(getApiUrl(API_ENDPOINTS.USERS.PROFILE_ME), {
         method: 'GET',
         headers: {
           ...AuthService.getAuthHeader(),

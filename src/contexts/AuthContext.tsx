@@ -73,8 +73,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       const response = await AuthService.login({ email, password });
+      const userData = response.data || response.user || {};
       setToken(response.token);
-      setUser(response.user);
+      setUser(userData);
       setIsAuthenticated(true);
     } catch (err: any) {
       const errorMessage = err.message || 'Login failed';
@@ -90,8 +91,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       const response = await AuthService.register(userData);
+      const user = response.data || response.user || {};
       setToken(response.token);
-      setUser(response.user);
+      setUser(user);
       setIsAuthenticated(true);
     } catch (err: any) {
       const errorMessage = err.message || 'Registration failed';

@@ -3,7 +3,7 @@
  * Central place for API endpoint management
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export const API_ENDPOINTS = {
   // Authentication
@@ -17,6 +17,7 @@ export const API_ENDPOINTS = {
   
   // Users
   USERS: {
+    PROFILE_ME: '/users/profile/me',
     PROFILE: '/users/profile',
     UPDATE_PROFILE: '/users/profile',
     GET_USER: '/users/:id',
