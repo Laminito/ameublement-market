@@ -173,7 +173,23 @@ class UserService {
       }
 
       const result = await response.json();
-      return result.avatar || result.url || null;
+      // Handle different response formats
+      if (result.data?.avatarUrl) {
+        return result.data.avatarUrl;
+      }
+      if (result.data?.avatar) {
+        return result.data.avatar;
+      }
+      if (result.avatarUrl) {
+        return result.avatarUrl;
+      }
+      if (result.avatar) {
+        return result.avatar;
+      }
+      if (result.url) {
+        return result.url;
+      }
+      return null;
     } catch (error) {
       console.error('Error fetching avatar:', error);
       return null;
