@@ -3,9 +3,7 @@
  * Helpers for constructing full image URLs
  */
 
-const API_BASE_URL = import.meta.env.DEV 
-  ? '' // In dev, use relative paths (proxy handles it)
-  : (import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:3000');
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 /**
  * Get full avatar URL

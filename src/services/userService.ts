@@ -25,15 +25,15 @@ export interface UserProfile {
 }
 
 export interface UpdateProfileRequest {
-  name?: string;
-  email?: string;
+  firstName?: string;
+  lastName?: string;
   phone?: string;
-  address?: {
-    street?: string;
-    city?: string;
-    postalCode?: string;
-    country?: string;
-  };
+  address?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
+  // Also support name as a single field for convenience
+  name?: string;
 }
 
 export interface UpdatePasswordRequest {
@@ -90,13 +90,33 @@ class UserService {
         throw new Error('No authentication token found');
       }
 
+      // Transform the request data to match backend API format
+      const payload: any = {};
+      
+      // Handle name field - split into firstName and lastName if needed
+      if (data.name) {
+        const nameParts = data.name.trim().split(/\s+/);
+        payload.firstName = nameParts[0] || '';
+        payload.lastName = nameParts.slice(1).join(' ') || '';
+      } else {
+        if (data.firstName) payload.firstName = data.firstName;
+        if (data.lastName) payload.lastName = data.lastName;
+      }
+      
+      // Add other fields
+      if (data.phone) payload.phone = data.phone;
+      if (data.address) payload.address = data.address;
+      if (data.city) payload.city = data.city;
+      if (data.postalCode) payload.postalCode = data.postalCode;
+      if (data.country) payload.country = data.country;
+
       const response = await fetch(getApiUrl(API_ENDPOINTS.USERS.UPDATE_PROFILE), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           ...AuthService.getAuthHeader(),
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

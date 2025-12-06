@@ -104,14 +104,11 @@ export default function Profile() {
     try {
       await UserService.updateProfile({
         name: formData.name,
-        email: formData.email,
         phone: formData.phone,
-        address: {
-          street: formData.street,
-          city: formData.city,
-          postalCode: formData.postalCode,
-          country: formData.country,
-        },
+        address: formData.street,
+        city: formData.city,
+        postalCode: formData.postalCode,
+        country: formData.country,
       });
 
       setSuccess('Profile updated successfully!');
