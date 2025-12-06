@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, MapPin, Camera, Save, LogOut, AlertCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Camera, Save, LogOut, AlertCircle } from 'lucide-react';
 
 interface UserProfile {
   _id: string;

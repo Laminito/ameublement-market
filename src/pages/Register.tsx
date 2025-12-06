@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Lock, Phone, AlertCircle, Eye, EyeOff, Loader, CheckCircle } from 'lucide-react';
+import AuthService from '@/services/authService';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -76,33 +77,18 @@ export default function Register() {
 
     setIsLoading(true);
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          phone: formData.phone || undefined,
-        }),
+      await AuthService.register({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone || '',
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setApiError(data.message || 'Registration failed');
-        return;
-      }
-
-      // Stocker le token
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      // Rediriger vers home
+      // Rediriger vers home après inscription réussie
       navigate('/');
-    } catch (error) {
-      setApiError('Network error. Please try again.');
+    } catch (error: any) {
+      setApiError(error.message || 'Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
     }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, Trash2, Plus, Minus, AlertCircle, Truck } from 'lucide-react';
+import { ShoppingCart, AlertCircle, Truck } from 'lucide-react';
 
 interface CartItem {
   id: string;
@@ -25,7 +25,6 @@ interface CheckoutData {
 export default function Checkout() {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [userData, setUserData] = useState<any>(null);
   const [checkoutData, setCheckoutData] = useState<CheckoutData>({
     firstName: '',
     lastName: '',
@@ -52,7 +51,6 @@ export default function Checkout() {
     const user = localStorage.getItem('user');
     if (user) {
       const userData = JSON.parse(user);
-      setUserData(userData);
       setCheckoutData(prev => ({
         ...prev,
         firstName: userData.firstName || '',

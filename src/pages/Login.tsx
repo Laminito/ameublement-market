@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, AlertCircle, Eye, EyeOff, Loader } from 'lucide-react';
+import AuthService from '@/services/authService';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -37,27 +38,15 @@ export default function Login() {
 
     setIsLoading(true);
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+      await AuthService.login({
+        email: formData.email,
+        password: formData.password,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setApiError(data.message || 'Login failed');
-        return;
-      }
-
-      // Stocker le token
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      // Rediriger vers home ou commandes
+      // Rediriger vers home après connexion réussie
       navigate('/');
-    } catch (error) {
-      setApiError('Network error. Please try again.');
+    } catch (error: any) {
+      setApiError(error.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }

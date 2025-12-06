@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import Home from '@/pages/Home';
 import Products from '@/pages/Products';
@@ -13,6 +13,13 @@ import Checkout from '@/pages/Checkout';
 import OrderDetails from '@/pages/OrderDetails';
 import Layout from '@/components/layout/Layout';
 
+// Layout wrapper component
+const LayoutWrapper = () => (
+  <Layout>
+    <Outlet />
+  </Layout>
+);
+
 function App() {
   return (
     <Router>
@@ -22,7 +29,7 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         {/* Main Routes - With Layout */}
-        <Route element={<Layout />}>
+        <Route element={<LayoutWrapper />}>
           <Route path={ROUTES.HOME} element={<Home />} />
           <Route path={ROUTES.PRODUCTS} element={<Products />} />
           <Route path={ROUTES.PRODUCT_DETAILS} element={<ProductDetails />} />
@@ -32,6 +39,9 @@ function App() {
           <Route path={ROUTES.ORDERS} element={<Orders />} />
           <Route path="/orders/:id" element={<OrderDetails />} />
           <Route path="/profile" element={<Profile />} />
+          
+          {/* Catch-all: Redirect unknown routes to home */}
+          <Route path="*" element={<Home />} />
         </Route>
       </Routes>
     </Router>
