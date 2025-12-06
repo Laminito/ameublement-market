@@ -13,15 +13,21 @@ export interface LoginRequest {
 export interface LoginResponse {
   success: boolean;
   token: string;
-  user: {
+  data?: {
     id: string;
+    name: string;
     email: string;
-    firstName: string;
-    lastName: string;
-    phone?: string;
-    avatar?: string;
     role: string;
-    createdAt: string;
+    creditLimit?: number;
+    availableCredit?: number;
+  };
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    creditLimit?: number;
+    availableCredit?: number;
   };
 }
 
@@ -77,9 +83,10 @@ class AuthService {
 
       const data = await response.json() as LoginResponse;
 
-      // Store token and user info
+      // Store token and user info - handle both 'data' and 'user' formats
+      const user = data.data || data.user || {};
       this.setToken(data.token);
-      this.setUser(data.user);
+      this.setUser(user);
 
       return data;
     } catch (error) {
