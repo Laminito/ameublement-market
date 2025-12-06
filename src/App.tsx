@@ -11,6 +11,8 @@ import Register from '@/pages/Register';
 import Profile from '@/pages/Profile';
 import Checkout from '@/pages/Checkout';
 import OrderDetails from '@/pages/OrderDetails';
+import ForgotPassword from '@/pages/ForgotPassword';
+import ResetPassword from '@/pages/ResetPassword';
 import Layout from '@/components/layout/Layout';
 
 // Layout wrapper component
@@ -27,6 +29,8 @@ function App() {
         {/* Auth Routes - Without Layout */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Main Routes - With Layout */}
         <Route element={<LayoutWrapper />}>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, Phone, MapPin, Camera, Save, LogOut, AlertCircle, Lock, Eye, EyeOff, Loader } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import UserService, { type UserProfile } from '@/services/userService';
+import AuthService from '@/services/authService';
 import { getAvatarUrl } from '@/utils/imageUrl';
 
 export default function Profile() {
@@ -163,11 +164,10 @@ export default function Profile() {
 
     setSaving(true);
     try {
-      await UserService.updatePassword({
-        currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword,
-        confirmPassword: passwordData.confirmPassword,
-      });
+      await AuthService.updatePassword(
+        passwordData.currentPassword,
+        passwordData.newPassword
+      );
 
       setPasswordSuccess('Password updated successfully!');
       setPasswordData({

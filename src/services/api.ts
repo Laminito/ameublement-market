@@ -14,6 +14,9 @@ export const API_ENDPOINTS = {
     REFRESH_TOKEN: '/auth/refresh-token',
     VERIFY: '/auth/verify',
     GET_ME: '/auth/me',
+    UPDATE_PASSWORD: '/auth/update-password',
+    FORGOT_PASSWORD: '/auth/forgot-password',
+    RESET_PASSWORD: '/auth/reset-password', // append /{token}
   },
   
   // Users
