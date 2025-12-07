@@ -1,11 +1,31 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, CreditCard, TruckIcon, Shield, Heart, Sparkles, Calendar, Wallet } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
-import { getFeaturedProducts } from '@/data/products';
+import ProductService, { type Product } from '@/services/productService';
 import ProductCard from '@/components/products/ProductCard';
 
 const Home = () => {
-  const featuredProducts = getFeaturedProducts().slice(0, 4);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        setLoading(true);
+        const response = await ProductService.getFeaturedProducts();
+        setFeaturedProducts(response.data.slice(0, 4));
+      } catch (error) {
+        console.error('Error fetching featured products:', error);
+        // Fallback to empty array if error
+        setFeaturedProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeatured();
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -267,11 +287,17 @@ const Home = () => {
             <p className="text-xl text-gray-600">Découvrez notre sélection des meilleurs meubles</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center py-16">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </div>
+          )}
 
           <div className="text-center">
             <Link
