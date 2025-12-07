@@ -518,6 +518,7 @@ export default function Profile() {
                     name="currentPassword"
                     value={passwordData.currentPassword}
                     onChange={handlePasswordChange}
+                    autoComplete="off"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg pr-10 bg-gray-50 text-gray-600"
                     placeholder="Enter current password"
                   />
@@ -540,6 +541,7 @@ export default function Profile() {
                     name="newPassword"
                     value={passwordData.newPassword}
                     onChange={handlePasswordChange}
+                    autoComplete="off"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg pr-10"
                     placeholder="Enter new password (min. 8 characters)"
                   />
@@ -562,6 +564,7 @@ export default function Profile() {
                     name="confirmPassword"
                     value={passwordData.confirmPassword}
                     onChange={handlePasswordChange}
+                    autoComplete="off"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg pr-10"
                     placeholder="Confirm new password"
                   />
