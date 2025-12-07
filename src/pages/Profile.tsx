@@ -518,13 +518,13 @@ export default function Profile() {
                     name="currentPassword"
                     value={passwordData.currentPassword}
                     onChange={handlePasswordChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg pr-10"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg pr-10 bg-gray-50 text-gray-600"
                     placeholder="Enter current password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPasswords(prev => ({ ...prev, current: !prev.current }))}
-                    className="absolute right-3 top-3 text-gray-600 hover:text-gray-900"
+                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                   >
                     {showPasswords.current ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
