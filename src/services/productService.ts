@@ -89,7 +89,19 @@ class ProductService {
         throw new Error('Failed to fetch products');
       }
 
-      return await response.json();
+      const result = await response.json() as ProductsResponse;
+      
+      // Deduplicate products by ID in case backend returns duplicates
+      const uniqueProducts = Array.from(
+        new Map(result.data.map((product) => [product._id, product])).values()
+      );
+      
+      console.log(`[ProductService] getProducts: ${result.data.length} products received, ${uniqueProducts.length} unique`);
+      
+      return {
+        ...result,
+        data: uniqueProducts,
+      };
     } catch (error) {
       console.error('Get products error:', error);
       throw error;
@@ -112,7 +124,19 @@ class ProductService {
         throw new Error('Failed to fetch featured products');
       }
 
-      return await response.json();
+      const result = await response.json() as ProductsResponse;
+      
+      // Deduplicate products by ID in case backend returns duplicates
+      const uniqueProducts = Array.from(
+        new Map(result.data.map((product) => [product._id, product])).values()
+      );
+      
+      console.log(`[ProductService] getFeaturedProducts: ${result.data.length} products received, ${uniqueProducts.length} unique`);
+      
+      return {
+        ...result,
+        data: uniqueProducts,
+      };
     } catch (error) {
       console.error('Get featured products error:', error);
       throw error;
@@ -160,7 +184,19 @@ class ProductService {
         throw new Error('Failed to fetch products by category');
       }
 
-      return await response.json();
+      const result = await response.json() as ProductsResponse;
+      
+      // Deduplicate products by ID in case backend returns duplicates
+      const uniqueProducts = Array.from(
+        new Map(result.data.map((product) => [product._id, product])).values()
+      );
+      
+      console.log(`[ProductService] getProductsByCategory(${category}): ${result.data.length} products received, ${uniqueProducts.length} unique`);
+      
+      return {
+        ...result,
+        data: uniqueProducts,
+      };
     } catch (error) {
       console.error('Get products by category error:', error);
       throw error;
@@ -184,7 +220,19 @@ class ProductService {
         throw new Error('Failed to search products');
       }
 
-      return await response.json();
+      const result = await response.json() as ProductsResponse;
+      
+      // Deduplicate products by ID in case backend returns duplicates
+      const uniqueProducts = Array.from(
+        new Map(result.data.map((product) => [product._id, product])).values()
+      );
+      
+      console.log(`[ProductService] searchProducts(${query}): ${result.data.length} products received, ${uniqueProducts.length} unique`);
+      
+      return {
+        ...result,
+        data: uniqueProducts,
+      };
     } catch (error) {
       console.error('Search products error:', error);
       throw error;

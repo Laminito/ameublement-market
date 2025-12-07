@@ -5,7 +5,7 @@ import { CreditCard, Wallet, CheckCircle2, ArrowLeft } from 'lucide-react';
 interface PaymentState {
   productId?: string;
   paymentMode?: 'cash' | 'credit';
-  creditDuration?: 3 | 6 | 9 | 12 | 18 | 24;
+  creditDuration?: 1 | 2 | 3 | 4 | 5 | 6;
   priceCash?: number;
   priceCredit?: number;
 }

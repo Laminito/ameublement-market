@@ -14,7 +14,11 @@ const Home = () => {
       try {
         setLoading(true);
         const response = await ProductService.getFeaturedProducts();
-        setFeaturedProducts(response.data.slice(0, 4));
+        // Deduplicate by ID and take first 4
+        const uniqueProducts = Array.from(
+          new Map(response.data.map((product) => [product._id, product])).values()
+        ).slice(0, 4);
+        setFeaturedProducts(uniqueProducts);
       } catch (error) {
         console.error('Error fetching featured products:', error);
         // Fallback to empty array if error
@@ -103,7 +107,7 @@ const Home = () => {
                     </div>
                     <div>
                       <div className="font-bold text-lg">Paiement facile</div>
-                      <div className="text-sm text-gray-600">Jusqu'à 24 mois</div>
+                      <div className="text-sm text-gray-600">Jusqu'à 6 mois</div>
                     </div>
                   </div>
                 </div>
@@ -178,7 +182,7 @@ const Home = () => {
                 step: '02',
                 icon: <Calendar size={32} />,
                 title: 'Sélectionnez votre durée',
-                description: 'Choisissez de payer en 3, 6, 9, 12, 18 ou 24 mois',
+                    description: 'Choisissez de payer en 1, 2, 3, 4, 5 ou 6 mois',
                 bgGradient: 'bg-gradient-to-br from-accent-500 to-accent-600',
                 textColor: 'text-accent-100'
               },

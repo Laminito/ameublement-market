@@ -27,13 +27,21 @@ const Products = () => {
           response = await ProductService.getProductsByCategory(selectedCategory);
         }
 
-        setProducts(response.data);
+        // Deduplicate products by ID to prevent duplicates
+        const uniqueProducts = Array.from(
+          new Map(response.data.map((product) => [product._id, product])).values()
+        );
+
+        setProducts(uniqueProducts);
         setTotalPages(response.pagination.totalPages);
 
+        // Log for debugging
+        console.log(`Received ${response.data.length} products, ${uniqueProducts.length} after deduplication`);
+        
         // Extract unique categories from products if first load
-        if (categories.length === 1) {
+        if (categories.length === 1 && uniqueProducts.length > 0) {
           const uniqueCategories = new Map();
-          response.data.forEach((product) => {
+          uniqueProducts.forEach((product) => {
             if (!uniqueCategories.has(product.category.slug)) {
               uniqueCategories.set(product.category.slug, {
                 id: product.category.slug,
@@ -44,10 +52,16 @@ const Products = () => {
           });
 
           if (uniqueCategories.size > 0) {
-            setCategories([
-              { id: 'all', name: 'Tous les produits', icon: '🏠' },
-              ...Array.from(uniqueCategories.values()),
-            ]);
+            setCategories((prevCategories) => {
+              // Check if categories have already been set to prevent duplicates
+              if (prevCategories.length > 1) {
+                return prevCategories;
+              }
+              return [
+                { id: 'all', name: 'Tous les produits', icon: '🏠' },
+                ...Array.from(uniqueCategories.values()),
+              ];
+            });
           }
         }
       } catch (err) {

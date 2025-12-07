@@ -28,7 +28,7 @@ const ProductDetails = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [paymentMode, setPaymentMode] = useState<'cash' | 'credit'>('cash');
-  const [creditDuration, setCreditDuration] = useState<3 | 6 | 9 | 12 | 18 | 24>(12);
+  const [creditDuration, setCreditDuration] = useState<1 | 2 | 3 | 4 | 5 | 6>(3);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -223,7 +223,7 @@ const ProductDetails = () => {
                 <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-xl mb-6">
                   <h4 className="font-bold mb-4">Durée de crédit</h4>
                   <div className="grid grid-cols-3 gap-3 mb-6">
-                    {([3, 6, 9, 12, 18, 24] as const).map((duration) => (
+                    {([1, 2, 3, 4, 5, 6] as const).map((duration) => (
                       <button key={duration} onClick={() => setCreditDuration(duration)} className={`py-3 rounded-lg font-semibold transition-all ${creditDuration === duration ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105' : 'bg-white text-gray-700 hover:bg-purple-100'}`}>
                         {duration}M
                       </button>
