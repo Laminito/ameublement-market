@@ -9,7 +9,7 @@ export interface CreditReservationRequest {
     phone: string;
   };
   amount: number;
-  duration: 3 | 6 | 9 | 12 | 18 | 24;
+  duration: 1 | 2 | 3 | 4 | 5 | 6;
   orderNumber: string;
 }
 
