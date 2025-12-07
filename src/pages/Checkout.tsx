@@ -19,7 +19,7 @@ interface CheckoutData {
   city: string;
   postalCode: string;
   paymentMethod: 'kredika' | 'card';
-  installments?: 3 | 6 | 12 | 24;
+  installments?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
 export default function Checkout() {

@@ -5,12 +5,12 @@ export const KREDIKA_CONFIG = {
 };
 
 export const INTEREST_RATES: Record<number, number> = {
+  1: 0.01,   // 1% pour 1 mois
+  2: 0.02,   // 2% pour 2 mois
   3: 0.05,   // 5% pour 3 mois
+  4: 0.06,   // 6% pour 4 mois
+  5: 0.07,   // 7% pour 5 mois
   6: 0.08,   // 8% pour 6 mois
-  9: 0.12,   // 12% pour 9 mois
-  12: 0.15,  // 15% pour 12 mois
-  18: 0.2,   // 20% pour 18 mois
-  24: 0.25,  // 25% pour 24 mois
 };
 
 export const DELIVERY_FEE = 5000; // 5000 FCFA

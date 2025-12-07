@@ -12,6 +12,8 @@ export interface AuthContextType {
   token: string | null;
   loading: boolean;
   error: string | null;
+  role: string | null;
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (userData: any) => Promise<void>;
   logout: () => Promise<void>;
@@ -26,6 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
   // Initialize auth state from localStorage
   useEffect(() => {
@@ -41,6 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const freshUser = await AuthService.getMe();
             setToken(storedToken);
             setUser(freshUser);
+            setRole(freshUser.role || 'user');
             setIsAuthenticated(true);
           } catch (err) {
             // If getMe fails, try to verify token
@@ -49,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (isValid) {
               setToken(storedToken);
               setUser(storedUser);
+              setRole(storedUser.role || 'user');
               setIsAuthenticated(true);
             } else {
               // Try to refresh token
@@ -56,10 +61,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               if (newToken) {
                 setToken(newToken);
                 setUser(storedUser);
+                setRole(storedUser.role || 'user');
                 setIsAuthenticated(true);
               } else {
                 AuthService.clearAuth();
                 setIsAuthenticated(false);
+                setRole(null);
               }
             }
           }
@@ -68,6 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.error('Auth initialization error:', err);
         AuthService.clearAuth();
         setIsAuthenticated(false);
+        setRole(null);
       } finally {
         setLoading(false);
       }
@@ -81,9 +89,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       const response = await AuthService.login({ email, password });
-      const userData = response.data || response.user || {};
+      const userData = (response.data || response.user || {}) as any;
       setToken(response.token);
       setUser(userData);
+      setRole((userData?.role as string) || 'user');
       setIsAuthenticated(true);
     } catch (err: any) {
       const errorMessage = err.message || 'Login failed';
@@ -99,9 +108,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       const response = await AuthService.register(userData);
-      const user = response.data || response.user || {};
+      const user = (response.data || response.user || {}) as any;
       setToken(response.token);
       setUser(user);
+      setRole((user?.role as string) || 'user');
       setIsAuthenticated(true);
     } catch (err: any) {
       const errorMessage = err.message || 'Registration failed';
@@ -119,6 +129,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await AuthService.logout();
       setToken(null);
       setUser(null);
+      setRole(null);
       setIsAuthenticated(false);
     } catch (err: any) {
       const errorMessage = err.message || 'Logout failed';
@@ -138,6 +149,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     token,
     loading,
     error,
+    role,
+    isAdmin: role === 'admin',
     login,
     register,
     logout,

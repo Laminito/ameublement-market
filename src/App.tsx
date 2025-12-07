@@ -13,6 +13,9 @@ import Checkout from '@/pages/Checkout';
 import OrderDetails from '@/pages/OrderDetails';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
+import AdminDashboard from '@/pages/AdminDashboard';
+import AdminProducts from '@/pages/AdminProducts';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import Layout from '@/components/layout/Layout';
 
 // Layout wrapper component
@@ -31,6 +34,26 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+        {/* Admin Routes - Protected */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/products"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <Layout>
+                <AdminProducts />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
 
         {/* Main Routes - With Layout */}
         <Route element={<LayoutWrapper />}>

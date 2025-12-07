@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, role } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -41,8 +41,12 @@ export default function Login() {
     try {
       await login(formData.email, formData.password);
 
-      // Rediriger vers home après connexion réussie
-      navigate('/');
+      // Rediriger basé sur le rôle
+      if (role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (error: any) {
       setApiError(error.message || 'Login failed. Please try again.');
     } finally {

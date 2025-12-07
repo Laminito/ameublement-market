@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Mail, Phone, MapPin, Camera, Save, LogOut, AlertCircle, Lock, Eye, EyeOff, Loader } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Mail, Phone, MapPin, Camera, Save, LogOut, AlertCircle, Lock, Eye, EyeOff, Loader, Settings } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import UserService, { type UserProfile } from '@/services/userService';
 import AuthService from '@/services/authService';
@@ -279,13 +279,22 @@ export default function Profile() {
               <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">My Profile</h1>
               <p className="text-gray-600">Manage your account information</p>
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors"
-            >
-              <LogOut size={20} />
-              Logout
-            </button>
+            <div className="flex gap-3 flex-wrap">
+              <Link
+                to="/admin/dashboard"
+                className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+              >
+                <Settings size={20} />
+                Admin
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors"
+              >
+                <LogOut size={20} />
+                Logout
+              </button>
+            </div>
           </div>
         </div>
 
