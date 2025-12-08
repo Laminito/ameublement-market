@@ -13,10 +13,10 @@ interface CreateOrderPayload {
     street: string;
     city: string;
     postalCode: string;
+    country: string;
     phone: string;
   };
   paymentMethod: 'kredika' | 'card' | 'transfer';
-  installments?: number;
 }
 
 interface OrderListResponse {

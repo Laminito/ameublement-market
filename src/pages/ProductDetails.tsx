@@ -29,6 +29,7 @@ const ProductDetails = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [paymentMode, setPaymentMode] = useState<'cash' | 'credit'>('cash');
   const [creditDuration, setCreditDuration] = useState<1 | 2 | 3 | 4 | 5 | 6>(3);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -110,16 +111,13 @@ const ProductDetails = () => {
       video: undefined,
     };
 
-    addItem(cartProduct, 1);
-    navigate('/payment', {
-      state: {
-        productId: product._id,
-        paymentMode,
-        creditDuration,
-        priceCash: product.price,
-        priceCredit: creditDetails.totalWithInterest,
-      },
-    });
+    // Add item to cart
+    addItem(cartProduct, quantity);
+    
+    // Give store time to update before navigating to cart
+    setTimeout(() => {
+      navigate('/cart');
+    }, 100);
   };
 
   return (
@@ -247,6 +245,40 @@ const ProductDetails = () => {
                   </div>
                 </div>
               )}
+
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Quantité</label>
+                <div className="flex items-center gap-3">
+                  <button 
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    disabled={quantity <= 1}
+                    className="w-12 h-12 rounded-lg border-2 border-gray-300 hover:border-purple-600 disabled:opacity-50 font-bold text-xl transition-all"
+                  >
+                    −
+                  </button>
+                  <div className="flex-1 text-center">
+                    <input 
+                      type="number" 
+                      min="1" 
+                      max={product.stockQuantity}
+                      value={quantity}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value) || 1;
+                        setQuantity(Math.min(Math.max(1, val), product.stockQuantity));
+                      }}
+                      className="w-full text-center text-xl font-bold py-2 border-2 border-gray-300 rounded-lg focus:border-purple-600 focus:outline-none"
+                    />
+                  </div>
+                  <button 
+                    onClick={() => setQuantity(Math.min(product.stockQuantity, quantity + 1))}
+                    disabled={quantity >= product.stockQuantity}
+                    className="w-12 h-12 rounded-lg border-2 border-gray-300 hover:border-purple-600 disabled:opacity-50 font-bold text-xl transition-all"
+                  >
+                    +
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">Max: {product.stockQuantity} disponible(s)</p>
+              </div>
 
               <button onClick={handleReservation} disabled={!product.inStock} className="w-full bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-purple-500/50 hover:scale-105 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">
                 <ShoppingCart size={24} />
