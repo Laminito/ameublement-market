@@ -1,5 +1,7 @@
-import { Link } from 'react-router-dom';
-import { mockOrders } from '@/data/mockOrders';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import OrderService from '@/services/orderService';
 import { formatCurrency } from '@/utils/currency';
 import { 
   Package, 
@@ -11,11 +13,55 @@ import {
   MapPin,
   Calendar,
   ArrowRight,
-  XCircle
+  XCircle,
+  Loader
 } from 'lucide-react';
-import type { OrderStatus, PaymentStatus } from '@/types/order';
+import type { OrderStatus, PaymentStatus, Order } from '@/types/order';
 
 const Orders = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Rediriger vers login si non authentifié
+    if (!authLoading && !isAuthenticated) {
+      console.log('Not authenticated, redirecting to login');
+      navigate('/login');
+      return;
+    }
+
+    // Charger les commandes si authentifié
+    if (isAuthenticated) {
+      console.log('User authenticated, fetching orders');
+      fetchOrders();
+    }
+  }, [isAuthenticated, authLoading, navigate]);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      console.log('Fetching orders...');
+      const result = await OrderService.getUserOrders();
+      console.log('Orders fetched:', result.orders.length, 'orders');
+      setOrders(result.orders);
+    } catch (err) {
+      console.error('Failed to load orders:', err);
+      const errorMsg = err instanceof Error ? err.message : 'Failed to load orders';
+      setError(errorMsg);
+      // Si erreur d'authentification, rediriger
+      if (errorMsg.includes('Authentication') || errorMsg.includes('401')) {
+        console.log('Authentication error, redirecting to login');
+        navigate('/login');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getStatusBadge = (status: OrderStatus) => {
     const badges = {
       PENDING: { label: 'En attente', color: 'bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 border border-yellow-200', icon: Clock },
@@ -38,12 +84,13 @@ const Orders = () => {
     return badges[status];
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: string | Date) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
     return new Intl.DateTimeFormat('fr-FR', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
-    }).format(date);
+    }).format(dateObj);
   };
 
   return (
@@ -60,7 +107,46 @@ const Orders = () => {
         </div>
 
         {/* Orders List */}
-        {mockOrders.length === 0 ? (
+        {authLoading || loading ? (
+          <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12 text-center border border-gray-100">
+            <Loader size={40} className="text-blue-600 animate-spin mx-auto mb-4" />
+            <p className="text-gray-600">Chargement de vos commandes...</p>
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 rounded-2xl shadow-lg p-8 sm:p-12 text-center border border-red-200">
+            <XCircle size={40} className="text-red-600 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-red-900 mb-2">Erreur</h2>
+            <p className="text-red-700 mb-6">{error}</p>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={() => fetchOrders()}
+                className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all"
+              >
+                Réessayer
+              </button>
+              <Link
+                to="/products"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+              >
+                Retour aux produits
+                <ArrowRight size={20} />
+              </Link>
+            </div>
+          </div>
+        ) : !isAuthenticated ? (
+          <div className="bg-yellow-50 rounded-2xl shadow-lg p-8 sm:p-12 text-center border border-yellow-200">
+            <Clock size={40} className="text-yellow-600 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-yellow-900 mb-2">Connexion requise</h2>
+            <p className="text-yellow-700 mb-6">Veuillez vous connecter pour voir vos commandes</p>
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+            >
+              Se connecter
+              <ArrowRight size={20} />
+            </Link>
+          </div>
+        ) : orders.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12 text-center border border-gray-100">
             <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
               <Package size={40} className="text-purple-600" />
@@ -79,14 +165,14 @@ const Orders = () => {
           </div>
         ) : (
           <div className="space-y-6">
-            {mockOrders.map((order) => {
+            {orders.map((order) => {
               const statusBadge = getStatusBadge(order.status);
               const paymentBadge = getPaymentStatusBadge(order.paymentStatus);
               const StatusIcon = statusBadge.icon;
 
               return (
                 <div
-                  key={order.id}
+                  key={order._id}
                   className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 border border-gray-100"
                 >
                   {/* Order Header */}
@@ -115,7 +201,7 @@ const Orders = () => {
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                          {formatCurrency(order.totalAmount)}
+                          {formatCurrency(order.totalAmount ?? order.pricing?.total ?? 0)}
                         </div>
                         <div className="flex items-center gap-2 justify-end mt-1">
                           {order.paymentMethod === 'CASH' ? (
@@ -180,21 +266,21 @@ const Orders = () => {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-100">
                       <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-3 rounded-lg">
                         <div className="text-sm text-gray-600">Sous-total</div>
-                        <div className="font-semibold text-blue-900">{formatCurrency(order.subtotal)}</div>
+                        <div className="font-semibold text-blue-900">{formatCurrency(order.subtotal ?? order.pricing?.subtotal ?? 0)}</div>
                       </div>
                       <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-3 rounded-lg">
                         <div className="text-sm text-gray-600">Livraison</div>
-                        <div className="font-semibold text-purple-900">{formatCurrency(order.deliveryFee)}</div>
+                        <div className="font-semibold text-purple-900">{formatCurrency(order.deliveryFee ?? order.pricing?.shipping ?? 0)}</div>
                       </div>
-                      {order.assemblyFee > 0 && (
+                      {(order.assemblyFee ?? 0) > 0 && (
                         <div className="bg-gradient-to-br from-orange-50 to-amber-50 p-3 rounded-lg">
                           <div className="text-sm text-gray-600">Montage</div>
-                          <div className="font-semibold text-orange-900">{formatCurrency(order.assemblyFee)}</div>
+                          <div className="font-semibold text-orange-900">{formatCurrency(order.assemblyFee ?? 0)}</div>
                         </div>
                       )}
                       <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-3 rounded-lg">
                         <div className="text-sm text-gray-600">Total</div>
-                        <div className="font-bold text-lg text-green-900">{formatCurrency(order.totalAmount)}</div>
+                        <div className="font-bold text-lg text-green-900">{formatCurrency(order.totalAmount ?? order.pricing?.total ?? 0)}</div>
                       </div>
                     </div>
 
@@ -202,14 +288,14 @@ const Orders = () => {
                     <div className="flex gap-3 mt-6">
                       {order.trackingNumber && (
                         <Link
-                          to={`/orders/${order.id}/tracking`}
+                          to={`/orders/${order._id}/tracking`}
                           className="flex-1 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 text-white py-2 px-4 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 hover:scale-105 transition-all text-center"
                         >
                           Suivre ma commande
                         </Link>
                       )}
                       <Link
-                        to={`/orders/${order.id}`}
+                        to={`/orders/${order._id}`}
                         className="flex-1 bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 py-2 px-4 rounded-lg font-semibold hover:from-gray-200 hover:to-slate-200 transition-all text-center border border-gray-200"
                       >
                         Voir les détails

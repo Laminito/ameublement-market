@@ -2,41 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Package, Clock, MapPin, DollarSign, Printer, Download, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-interface Order {
-  _id: string;
-  orderNumber: string;
-  status: string;
-  createdAt: string;
-  items: Array<{
-    product: { name: string; images: Array<{ url: string }> };
-    quantity: number;
-    price: number;
-  }>;
-  pricing: {
-    subtotal: number;
-    shipping: number;
-    tax: number;
-    total: number;
-  };
-  payment: {
-    method: string;
-    status: string;
-    kredikaTransactionId?: string;
-  };
-  shippingAddress: {
-    firstName: string;
-    lastName: string;
-    street: string;
-    city: string;
-    postalCode: string;
-    phone: string;
-  };
-  tracking?: {
-    trackingNumber: string;
-    estimatedDelivery: string;
-  };
-}
+import OrderService from '@/services/orderService';
+import type { Order } from '@/types/order';
 
 export default function OrderDetails() {
   const { id } = useParams<{ id: string }>();
@@ -48,30 +15,22 @@ export default function OrderDetails() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/login');
+        if (!id) {
+          navigate('/orders');
           return;
         }
 
-        const response = await fetch(`/api/orders/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          throw new Error('Order not found');
-        }
-
-        const data = await response.json();
-        setOrder(data.data);
+        const fetchedOrder = await OrderService.getOrderById(id);
+        setOrder(fetchedOrder);
       } catch (err) {
+        console.error('Failed to load order:', err);
         setError(err instanceof Error ? err.message : 'Failed to load order');
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) fetchOrder();
+    fetchOrder();
   }, [id, navigate]);
 
   const getStatusColor = (status: string) => {
@@ -176,30 +135,38 @@ export default function OrderDetails() {
               </h2>
 
               <div className="space-y-4">
-                {order.items.map((item, idx) => (
-                  <div key={idx} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
-                    {item.product.images[0] && (
-                      <img
-                        src={item.product.images[0].url}
-                        alt={item.product.name}
-                        className="w-20 h-20 object-cover rounded"
-                      />
-                    )}
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">{item.product.name}</h3>
-                      <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
-                      <p className="text-sm font-medium text-gray-900">€{item.price.toFixed(2)}</p>
+                {order.items.map((item, idx) => {
+                  const itemPrice = item.price || 0;
+                  const itemQty = item.quantity || 0;
+                  const itemImage = item.image || (item.product?.images?.[0]?.url);
+                  const itemName = item.productName || item.product?.name || 'Product';
+
+                  return (
+                    <div key={idx} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                      {itemImage && (
+                        <img
+                          src={itemImage}
+                          alt={itemName}
+                          className="w-20 h-20 object-cover rounded"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900">{itemName}</h3>
+                        <p className="text-sm text-gray-600">Qty: {itemQty}</p>
+                        <p className="text-sm font-medium text-gray-900">fcfa{itemPrice.toFixed(2)}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-gray-900">
+                          fcfa{(itemPrice * itemQty).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-gray-900">
-                        €{(item.price * item.quantity).toFixed(2)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
+            {/* Shipping Address */}
             {/* Shipping Address */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -208,12 +175,16 @@ export default function OrderDetails() {
               </h2>
 
               <div className="text-gray-700">
-                <p className="font-semibold">
-                  {order.shippingAddress.firstName} {order.shippingAddress.lastName}
-                </p>
-                <p>{order.shippingAddress.street}</p>
-                <p>{order.shippingAddress.postalCode} {order.shippingAddress.city}</p>
-                <p className="mt-2">{order.shippingAddress.phone}</p>
+                {(order.shippingAddress || order.deliveryAddress) && (
+                  <>
+                    <p className="font-semibold">
+                      {(order.shippingAddress?.firstName || order.deliveryAddress?.firstName || '')} {(order.shippingAddress?.lastName || order.deliveryAddress?.lastName || '')}
+                    </p>
+                    <p>{order.shippingAddress?.street || order.deliveryAddress?.street}</p>
+                    <p>{order.shippingAddress?.postalCode || order.deliveryAddress?.postalCode} {order.shippingAddress?.city || order.deliveryAddress?.city}</p>
+                    <p className="mt-2">{order.shippingAddress?.phone || order.deliveryAddress?.phone}</p>
+                  </>
+                )}
               </div>
 
               {order.tracking && (
@@ -242,19 +213,19 @@ export default function OrderDetails() {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">€{order.pricing.subtotal.toFixed(2)}</span>
+                  <span className="font-medium">€{(order.pricing?.subtotal || order.subtotal || 0).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
-                  <span className="font-medium">€{order.pricing.shipping.toFixed(2)}</span>
+                  <span className="font-medium">€{(order.pricing?.shipping || order.deliveryFee || 0).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax (20%)</span>
-                  <span className="font-medium">€{order.pricing.tax.toFixed(2)}</span>
+                  <span className="font-medium">€{(order.pricing?.tax || order.tax || 0).toFixed(2)}</span>
                 </div>
                 <div className="pt-3 border-t border-gray-200 flex justify-between font-bold text-base">
                   <span>Total</span>
-                  <span className="text-purple-600">€{order.pricing.total.toFixed(2)}</span>
+                  <span className="text-purple-600">€{(order.pricing?.total || order.totalAmount || 0).toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -266,23 +237,23 @@ export default function OrderDetails() {
               <div className="space-y-3 text-sm">
                 <div>
                   <p className="text-gray-600 mb-1">Method</p>
-                  <p className="font-medium capitalize">{order.payment.method}</p>
+                  <p className="font-medium capitalize">{order.payment?.method || order.paymentMethod || 'Unknown'}</p>
                 </div>
                 <div>
                   <p className="text-gray-600 mb-1">Status</p>
                   <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                    order.payment.status === 'paid'
+                    (order.payment?.status || order.paymentStatus)?.toLowerCase() === 'paid' || (order.payment?.status || order.paymentStatus)?.toLowerCase() === 'partially_paid'
                       ? 'bg-green-100 text-green-800'
                       : 'bg-yellow-100 text-yellow-800'
                   }`}>
-                    {order.payment.status === 'paid' ? 'Paid' : 'Pending'}
+                    {order.payment?.status || order.paymentStatus || 'Pending'}
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Kredika Info */}
-            {order.payment.method === 'kredika' && (
+            {(order.payment?.method || order.paymentMethod)?.toString().toLowerCase() === 'kredika' && (
               <div className="bg-purple-50 rounded-xl border border-purple-200 p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Kredika Payment Plan</h3>
 
@@ -290,7 +261,7 @@ export default function OrderDetails() {
                   <p className="text-gray-700">
                     Your payment has been scheduled in installments. Check your email for payment instructions.
                   </p>
-                  {order.payment.kredikaTransactionId && (
+                  {order.payment?.kredikaTransactionId && (
                     <div>
                       <p className="text-gray-600">Transaction ID</p>
                       <p className="font-mono text-xs text-gray-900 break-all">
@@ -371,7 +342,7 @@ export default function OrderDetails() {
             <div className="flex gap-4">
               <div className="flex flex-col items-center">
                 <div className={`w-3 h-3 rounded-full ${
-                  order.status === 'delivered' ? 'bg-green-600' : 'bg-gray-300'
+                  order.status === 'DELIVERED' ? 'bg-green-600' : 'bg-gray-300'
                 }`}></div>
               </div>
               <div>

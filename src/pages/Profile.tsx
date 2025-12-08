@@ -8,7 +8,7 @@ import { getAvatarUrl } from '@/utils/imageUrl';
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
   
   // Profile data
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -280,13 +280,15 @@ export default function Profile() {
               <p className="text-gray-600">Manage your account information</p>
             </div>
             <div className="flex gap-3 flex-wrap">
-              <Link
-                to="/admin/dashboard"
-                className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
-              >
-                <Settings size={20} />
-                Admin
-              </Link>
+              {isAdmin && (
+                <Link
+                  to="/admin/dashboard"
+                  className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+                >
+                  <Settings size={20} />
+                  Admin
+                </Link>
+              )}
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors"
